@@ -30,6 +30,7 @@ class  MoviesListViewModel: NSObject {
         }
     // this varible will be implemented in the view and this is the bind between viewModel and view
     var bindMoviesListViewModelToController : (() -> (viewBindDelegate?))?
+    private var pageNumber = 1
     
     // MARK: Init Function
     override init() {
@@ -40,18 +41,26 @@ class  MoviesListViewModel: NSObject {
     }
     // MARK: Helping Functions
     // Api Call for article list
-    func getMostPopularArticle() {
-        
-        self.apiService?.getMostPopularNYArticles(page: 1) { result in 
+    private func getMostPopularArticle() {
+        self.apiService?.getMostPopularNYArticles(page: pageNumber) { result in
             switch result {
                     case .success(let response):
-                        self.articlesArray = response.results
+                        //self.articlesArray = response.results
+                        self.handlingResponse( data: response.results ?? [])
                     case .failure(let error):
-                        self.articlesArray = []
+                        self.handlingResponse( data: [])
+                       // self.articlesArray = []
                         print(error.localizedDescription)
                     }
-           
+        }
     }
+    private func handlingResponse(data:[Movie]) {
+        if pageNumber == 1 {
+            self.articlesArray = data
+        }else{
+            self.articlesArray?.append(contentsOf: data)
+        }
+        pageNumber += 1
     }
 }
 // MARK: View Event Notifer
@@ -66,6 +75,9 @@ extension MoviesListViewModel{
             self.viewBindDelegate?.pushToView(viewController: articleDetailsViewController ?? UIViewController())
             
         }
+    }
+    func getNextPage(){
+        self.getMostPopularArticle()
     }
     
 }

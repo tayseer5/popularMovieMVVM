@@ -46,7 +46,6 @@ class MoviesListViewController: UIViewController {
             noDataView.isHidden = false
         }
     }
-        
 }
 
 // MARK: extention for TableViewDelegate
@@ -71,6 +70,12 @@ extension MoviesListViewController:UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         moviesListViewModel?.selectArticle(at: indexPath.row)
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row == (moviesListViewModel?.articlesArray?.count ?? 0) - 4) {
+            moviesListViewModel?.getNextPage()
+            
+        }
     }
 }
 
