@@ -79,5 +79,9 @@ extension MoviesListViewModel{
     func getNextPage(){
         self.getMostPopularArticle()
     }
+    func reloadData () {
+        pageNumber = 1
+        self.getMostPopularArticle()
+    }
     
 }

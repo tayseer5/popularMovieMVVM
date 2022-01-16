@@ -14,22 +14,28 @@ class MoviesListViewController: UIViewController {
     
     // MARK: varibles
     private var moviesListViewModel: MoviesListViewModel?
+    private let refreshControl = UIRefreshControl()
 
     // MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        articleListTableView.delegate = self
-        articleListTableView.dataSource = self
-        registerTableViewCells()
+        adjustTableView()
         callToViewModelForUIUpdate()
     }
     
-    // MARK: Helping Function
-    private func registerTableViewCells() {
+    // MARK: UI Handling
+    private func adjustTableView() {
+        articleListTableView.delegate = self
+        articleListTableView.dataSource = self
         let articleTableViewCell = UINib(nibName: "ArticleTableViewCell",
                                   bundle: nil)
         articleListTableView.register(articleTableViewCell , forCellReuseIdentifier: "articleCell")
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
+        articleListTableView.addSubview(refreshControl)
+
     }
+    // MARK: Helping Function
     //this function from init view model and add callBack function logic from binding btween view and view model which will happend when api response come from webserice
     private func callToViewModelForUIUpdate(){
         self.moviesListViewModel = MoviesListViewModel()
@@ -45,6 +51,10 @@ class MoviesListViewController: UIViewController {
         } else {
             noDataView.isHidden = false
         }
+    }
+    @objc func pullToRefresh(_ sender: AnyObject) {
+        moviesListViewModel?.reloadData()
+        self.refreshControl.endRefreshing()
     }
 }
 
