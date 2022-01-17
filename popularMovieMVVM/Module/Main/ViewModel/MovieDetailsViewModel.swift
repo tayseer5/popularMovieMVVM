@@ -6,12 +6,17 @@
 //
 
 import Foundation
+
 class  MovieDetailsViewModel: NSObject {
     // MARK: Varibles
     var movie :Movie
     init(movie: Movie) {
             self.movie = movie
             super.init()
+    }
+    
+    func changeFavouriteState(){
+        
     }
     
 }

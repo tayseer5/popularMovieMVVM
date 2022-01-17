@@ -65,7 +65,7 @@ class MoviesListViewController: UIViewController {
 // MARK: extention for TableViewDelegate
 extension MoviesListViewController:UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70.0
+        return 200
     }
     
 }

@@ -74,7 +74,7 @@ extension MoviesListViewModel{
         if let movies = MoviesArray , movies.count > index {
             let moviewDetailsViewController = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController
             let movieDetailsViewModel: MovieDetailsViewModel = MovieDetailsViewModel(movie:movies[index])
-            moviewDetailsViewController?.articleDetailsViewModel = movieDetailsViewModel
+            moviewDetailsViewController?.movieDetailsViewModel = movieDetailsViewModel
             // after view model finish logic of get model after selection raw and init view mode and view of details screen it pass it to view to push it by calling delegate which view confirm 
             self.viewBindDelegate?.pushToView(viewController: moviewDetailsViewController ?? UIViewController())
             

@@ -9,16 +9,19 @@ import UIKit
 import Kingfisher
 
 class MovieTableViewCell: UITableViewCell {
-    @IBOutlet weak var articleImageView: UIImageView!
-    @IBOutlet weak var artcileData: UILabel!
+    @IBOutlet weak var movieImageView: UIImageView!
+    @IBOutlet weak var movieName: UILabel!
     
+    @IBOutlet weak var favouriteButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
     func bindData(_ articleModel: Movie) {
-        ImageLoader().loadImage(with: articleModel.poster_path, image: articleImageView)
-        artcileData.text = articleModel.title ?? ""
+        ImageLoader().loadImage(with: articleModel.poster_path, image: movieImageView)
+        movieName.text = articleModel.title ?? ""
+    }
+    @IBAction func changeFavouriteState(_ sender: Any) {
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
