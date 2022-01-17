@@ -11,7 +11,7 @@ pull to refresh
 infinite scroll 
 save data locally 
 
-**Futre Feature **
+**Futre Feature**
 
 add mark to favourites feature
 flitter feature 
