@@ -1,5 +1,5 @@
 //
-//  ArticleTableViewCell.swift
+//  MovieTableViewCell.swift
 //  popularMovieMVVM
 //
 //  Created by Tayseer Anwar on 01/14/22.
@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class ArticleTableViewCell: UITableViewCell {
+class MovieTableViewCell: UITableViewCell {
     @IBOutlet weak var articleImageView: UIImageView!
     @IBOutlet weak var artcileData: UILabel!
     

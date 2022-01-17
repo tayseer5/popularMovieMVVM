@@ -12,7 +12,7 @@ import Moya
 class NetworkManager: Networkable {
     var provider = MoyaProvider<MoviesAPI>(plugins: [NetworkLoggerPlugin()])
 
-    func getMostPopularNYArticles(page: Int, completion: @escaping (Result<MoviesListResponse, Error>) -> ()) {
+    func getMostPopularMovies(page: Int, completion: @escaping (Result<MoviesListResponse, Error>) -> ()) {
         request(target: .mostPopularMovies(page: page), completion: completion)
     }
 }
@@ -20,6 +20,7 @@ class NetworkManager: Networkable {
 private extension NetworkManager {
     //generic request method to prevents code dublication and used Result as return type to make it generic and able to know the case of response from enum if it success with response or fail with error
     private func request<T: Decodable>(target: MoviesAPI, completion: @escaping (Result<T, Error>) -> ()) {
+        
         provider.request(target) { result in
             switch result {
             case let .success(response):

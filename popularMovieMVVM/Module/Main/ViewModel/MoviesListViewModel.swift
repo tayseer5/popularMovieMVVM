@@ -19,9 +19,9 @@ class  MoviesListViewModel: NSObject {
     private var apiService: NetworkManager?
     // this is the result of bind view with viewModel it's confirmation for viewBindDelegate Protocol
     private var viewBindDelegate: viewBindDelegate?
-    // this is object of response model of api call for most popular article
+    // this is object of response model of api call for most popular movie
     // when object is init from api respponse the bind between ViewModel and View will done by calling callback function of bind which implemnted in view
-    private(set) var articlesArray : [Movie]? {
+    private(set) var MoviesArray : [Movie]? {
             didSet {
                 if let bind = self.bindMoviesListViewModelToController {
                     viewBindDelegate = bind()
@@ -36,52 +36,56 @@ class  MoviesListViewModel: NSObject {
     override init() {
         super.init()
         self.apiService = NetworkManager()
-        getMostPopularArticle()
-       
+        getMostPopularMovies()
     }
+    
     // MARK: Helping Functions
-    // Api Call for article list
-    private func getMostPopularArticle() {
-        self.apiService?.getMostPopularNYArticles(page: pageNumber) { result in
+    // Api Call for Movieslist
+    private func getMostPopularMovies() {
+        self.apiService?.getMostPopularMovies(page: pageNumber) { result in
             switch result {
                     case .success(let response):
-                        //self.articlesArray = response.results
                         self.handlingResponse( data: response.results ?? [])
                     case .failure(let error):
                         self.handlingResponse( data: [])
-                       // self.articlesArray = []
                         print(error.localizedDescription)
                     }
         }
     }
+    
     private func handlingResponse(data:[Movie]) {
-        if pageNumber == 1 {
-            self.articlesArray = data
-        }else{
-            self.articlesArray?.append(contentsOf: data)
+        if data.isEmpty && pageNumber == 1 {
+            self.MoviesArray = WARealmManager.shared.getMovies()
+        } else {
+            if pageNumber == 1 {
+                self.MoviesArray = data
+            }else{
+                self.MoviesArray?.append(contentsOf: data)
+            }
+            pageNumber += 1
+            WARealmManager.shared.createMoviesTable(movieArray: self.MoviesArray ?? [])
         }
-        pageNumber += 1
     }
 }
 // MARK: View Event Notifer
 extension MoviesListViewModel{
     // this function called from view to inform ViewModel that there was selected happend
-    func selectArticle (at index: Int)  {
-        if let articles = articlesArray , articles.count > index {
-            let articleDetailsViewController = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ArticleDetailsViewController") as? ArticleDetailsViewController
-            let articleDetailsViewModel: ArticleDetailsViewModel = ArticleDetailsViewModel(article:articles[index])
-            articleDetailsViewController?.articleDetailsViewModel = articleDetailsViewModel
+    func selectMovie (at index: Int)  {
+        if let movies = MoviesArray , movies.count > index {
+            let moviewDetailsViewController = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController
+            let movieDetailsViewModel: MovieDetailsViewModel = MovieDetailsViewModel(movie:movies[index])
+            moviewDetailsViewController?.articleDetailsViewModel = movieDetailsViewModel
             // after view model finish logic of get model after selection raw and init view mode and view of details screen it pass it to view to push it by calling delegate which view confirm 
-            self.viewBindDelegate?.pushToView(viewController: articleDetailsViewController ?? UIViewController())
+            self.viewBindDelegate?.pushToView(viewController: moviewDetailsViewController ?? UIViewController())
             
         }
     }
     func getNextPage(){
-        self.getMostPopularArticle()
+        self.getMostPopularMovies()
     }
     func reloadData () {
         pageNumber = 1
-        self.getMostPopularArticle()
+        self.getMostPopularMovies()
     }
     
 }

@@ -27,9 +27,9 @@ class MoviesListViewController: UIViewController {
     private func adjustTableView() {
         articleListTableView.delegate = self
         articleListTableView.dataSource = self
-        let articleTableViewCell = UINib(nibName: "ArticleTableViewCell",
+        let movieTableViewCell = UINib(nibName: "MovieTableViewCell",
                                   bundle: nil)
-        articleListTableView.register(articleTableViewCell , forCellReuseIdentifier: "articleCell")
+        articleListTableView.register(movieTableViewCell , forCellReuseIdentifier: "movieCell")
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
         articleListTableView.addSubview(refreshControl)
@@ -46,11 +46,15 @@ class MoviesListViewController: UIViewController {
     }
     // this function for notify data source that there was change in data 
     private func updateDataSource(){
-        if moviesListViewModel?.articlesArray?.count ?? 0 > 0{
+        if moviesListViewModel?.MoviesArray?.count ?? 0 > 0{
             articleListTableView.reloadData()
         } else {
             noDataView.isHidden = false
         }
+    }
+    @IBAction func test(_ sender: Any) {
+        let test = WARealmManager.shared.getMovies()
+        print(test.count)
     }
     @objc func pullToRefresh(_ sender: AnyObject) {
         moviesListViewModel?.reloadData()
@@ -68,21 +72,21 @@ extension MoviesListViewController:UITableViewDelegate {
 // MARK: extention for TableviewDataSource
 extension MoviesListViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        moviesListViewModel?.articlesArray?.count ?? 0
+        moviesListViewModel?.MoviesArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as? ArticleTableViewCell
-        if let articleArray = moviesListViewModel?.articlesArray {
-            cell?.bindData(articleArray[indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieTableViewCell
+        if let movieArray = moviesListViewModel?.MoviesArray {
+            cell?.bindData(movieArray[indexPath.row])
         }
         return cell ?? UITableViewCell()
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        moviesListViewModel?.selectArticle(at: indexPath.row)
+        moviesListViewModel?.selectMovie(at: indexPath.row)
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if (indexPath.row == (moviesListViewModel?.articlesArray?.count ?? 0) - 4) {
+        if (indexPath.row == (moviesListViewModel?.MoviesArray?.count ?? 0) - 4) {
             moviesListViewModel?.getNextPage()
             
         }

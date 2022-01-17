@@ -12,6 +12,6 @@ import Moya
 protocol Networkable {
     var provider: MoyaProvider<MoviesAPI> { get }
 
-    func getMostPopularNYArticles(page: Int, completion: @escaping (Result<MoviesListResponse, Error>) -> ())
+    func getMostPopularMovies(page: Int, completion: @escaping (Result<MoviesListResponse, Error>) -> ())
    
 }

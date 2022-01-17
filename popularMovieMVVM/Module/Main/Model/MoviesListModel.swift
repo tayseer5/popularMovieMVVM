@@ -1,11 +1,13 @@
 //
-//  ArticleModel.swift
+//  MoviesListResponse.swift
 //  popularMovieMVVM
 //
 //  Created by Tayseer Anwar on 01/14/22.
 //
 
 import Foundation
+import Realm
+import RealmSwift
 
 // MARK: - ResponseMOdel
 struct MoviesListResponse: Codable {
@@ -25,26 +27,26 @@ enum CodingKeys: String, CodingKey {
 }
 
 // MARK: - Result
-struct Movie: Codable {
-    let adult : Bool?
-    let backdrop_path : String?
-    let genre_ids : [Int]?
-    let id : Int?
-    let original_language : String?
-    let original_title : String?
-    let overview : String?
-    let popularity : Double?
-    let poster_path : String?
-    let release_date : String?
-    let title : String?
-    let video : Bool?
-    let vote_average : Double?
-    let vote_count : Int?
-
+class Movie: Object, Codable {
+    @Persisted var adult : Bool?
+    @Persisted var backdrop_path : String?
+//    @Persisted var genre_ids : [Int]?
+    @Persisted(primaryKey: true) var id : Int?
+    @Persisted var original_language : String?
+    @Persisted var original_title : String?
+    @Persisted var overview : String?
+    @Persisted var popularity : Double?
+    @Persisted var poster_path : String?
+    @Persisted var release_date : String?
+    @Persisted var title : String?
+    @Persisted var video : Bool?
+    @Persisted var vote_average : Double?
+    @Persisted var vote_count : Int?
+   
     enum CodingKeys: String, CodingKey {
         case adult = "adult"
         case backdrop_path = "backdrop_path"
-        case genre_ids = "genre_ids"
+//        case genre_ids = "genre_ids"
         case id = "id"
         case original_language = "original_language"
         case original_title = "original_title"
