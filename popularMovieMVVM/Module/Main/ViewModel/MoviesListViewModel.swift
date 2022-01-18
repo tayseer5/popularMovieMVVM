@@ -34,8 +34,7 @@ class  MoviesListViewModel: NSObject {
     // this varible will be implemented in the view and this is the bind between viewModel and view
     var bindMoviesListViewModelToController : (() -> (viewBindDelegate?))?
     private var pageNumber = 1
-    private var favouriteIdSet = Set<Int>()
-    private var changeDataInArray = false
+    private var isDisplayFavList = false
     
     // MARK: Init Function
     override init() {
@@ -71,6 +70,13 @@ class  MoviesListViewModel: NSObject {
             WARealmManager.shared.createMoviesTable(movieArray: self.MoviesArray ?? [])
         }
     }
+    private func  getFavouriteList (){
+        let arr = MoviesArray?.filter {
+            $0.isFavourite == true
+        }
+        MoviesArray = arr
+        self.viewBindDelegate?.reload()
+    }
 }
 // MARK: View Event Notifer
 extension MoviesListViewModel{
@@ -91,6 +97,16 @@ extension MoviesListViewModel{
     func reloadData () {
         pageNumber = 1
         self.getMostPopularMovies()
+    }
+    func switchList(){
+        if isDisplayFavList{
+            reloadData()
+        } else {
+            getFavouriteList ()
+        }
+        isDisplayFavList = !isDisplayFavList
+        
+        
     }
     
 }

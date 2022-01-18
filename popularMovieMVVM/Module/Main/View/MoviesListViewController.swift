@@ -19,6 +19,7 @@ class MoviesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         adjustTableView()
+        prepareUI()
         callToViewModelForUIUpdate()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -37,6 +38,11 @@ class MoviesListViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
         articleListTableView.addSubview(refreshControl)
+    }
+    private func prepareUI () {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .red
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "filterIcon.png"), style:.plain, target: self, action: #selector(switchList(_:)))
     }
     // MARK: Helping Function
     //this function from init view model and add callBack function logic from binding btween view and view model which will happend when api response come from webserice
@@ -62,6 +68,9 @@ class MoviesListViewController: UIViewController {
     @objc func pullToRefresh(_ sender: AnyObject) {
         moviesListViewModel?.reloadData()
         self.refreshControl.endRefreshing()
+    }
+    @objc func switchList(_ sender: AnyObject) {
+        moviesListViewModel?.switchList()
     }
 }
 
