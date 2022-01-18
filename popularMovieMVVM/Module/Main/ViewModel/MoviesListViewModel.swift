@@ -9,8 +9,11 @@ import Foundation
 import UIKit
 protocol viewBindDelegate {
     func pushToView(viewController: UIViewController)
+    func reload()
 }
-
+protocol ChangeDataInArray {
+    func changeFavouriteState(index: Int,state:Bool)
+}
 /// view model for main screen will hides all asynchronous networking code, data preparation code for visual presentation, and code listening for Model changes.  
 /// once view model receive response and prepare data it will notify view throught binding and binding function will return a confirmation for viewModelbinding  protocol
 class  MoviesListViewModel: NSObject {
@@ -31,6 +34,8 @@ class  MoviesListViewModel: NSObject {
     // this varible will be implemented in the view and this is the bind between viewModel and view
     var bindMoviesListViewModelToController : (() -> (viewBindDelegate?))?
     private var pageNumber = 1
+    private var favouriteIdSet = Set<Int>()
+    private var changeDataInArray = false
     
     // MARK: Init Function
     override init() {
@@ -73,7 +78,7 @@ extension MoviesListViewModel{
     func selectMovie (at index: Int)  {
         if let movies = MoviesArray , movies.count > index {
             let moviewDetailsViewController = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController
-            let movieDetailsViewModel: MovieDetailsViewModel = MovieDetailsViewModel(movie:movies[index])
+            let movieDetailsViewModel: MovieDetailsViewModel = MovieDetailsViewModel(movie: movies[index], changeDataInArray: self, index: index)
             moviewDetailsViewController?.movieDetailsViewModel = movieDetailsViewModel
             // after view model finish logic of get model after selection raw and init view mode and view of details screen it pass it to view to push it by calling delegate which view confirm 
             self.viewBindDelegate?.pushToView(viewController: moviewDetailsViewController ?? UIViewController())
@@ -87,5 +92,15 @@ extension MoviesListViewModel{
         pageNumber = 1
         self.getMostPopularMovies()
     }
+    
+}
+extension MoviesListViewModel :ChangeDataInArray {
+    func changeFavouriteState(index: Int, state:Bool) {
+        MoviesArray?[index].isFavourite = state
+        self.viewBindDelegate?.reload()
+        
+        
+    }
+    
     
 }

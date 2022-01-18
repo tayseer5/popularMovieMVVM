@@ -4,7 +4,6 @@
 //
 //  Created by Tayseer Anwar on 01/14/22.
 //
-
 import UIKit
 
 class MoviesListViewController: UIViewController {
@@ -22,7 +21,12 @@ class MoviesListViewController: UIViewController {
         adjustTableView()
         callToViewModelForUIUpdate()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        if self.moviesListViewModel?.changeDataInArray {
+//            self.reload()
+//        }
+    }
     // MARK: UI Handling
     private func adjustTableView() {
         articleListTableView.delegate = self
@@ -33,7 +37,6 @@ class MoviesListViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
         articleListTableView.addSubview(refreshControl)
-
     }
     // MARK: Helping Function
     //this function from init view model and add callBack function logic from binding btween view and view model which will happend when api response come from webserice
@@ -47,7 +50,7 @@ class MoviesListViewController: UIViewController {
     // this function for notify data source that there was change in data 
     private func updateDataSource(){
         if moviesListViewModel?.MoviesArray?.count ?? 0 > 0{
-            articleListTableView.reloadData()
+            self.reload()
         } else {
             noDataView.isHidden = false
         }
@@ -77,8 +80,9 @@ extension MoviesListViewController:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieTableViewCell
-        if let movieArray = moviesListViewModel?.MoviesArray {
-            cell?.bindData(movieArray[indexPath.row])
+        if let moviesListViewModel = moviesListViewModel, let moviesArray =  moviesListViewModel.MoviesArray {
+            let  movieTableViewCellViewModel = MovieTableViewCellViewModel(movie: moviesArray[indexPath.row], changeDataInArray: moviesListViewModel, index: indexPath.row)
+            cell?.bindData(movieTableViewCellViewModel)
         }
         return cell ?? UITableViewCell()
     }
@@ -88,7 +92,6 @@ extension MoviesListViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if (indexPath.row == (moviesListViewModel?.MoviesArray?.count ?? 0) - 4) {
             moviesListViewModel?.getNextPage()
-            
         }
     }
 }
@@ -97,5 +100,8 @@ extension MoviesListViewController: viewBindDelegate {
     func pushToView(viewController: UIViewController) {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
-    
+    func reload(){
+        articleListTableView.reloadData()
+    }
+
 }

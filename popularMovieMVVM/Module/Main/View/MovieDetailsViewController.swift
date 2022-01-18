@@ -23,17 +23,16 @@ class MovieDetailsViewController: UIViewController {
     
     // MARK: - Helpers
     private func prepareUI() {
-        navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .red
+        let imageName = movieDetailsViewModel?.movie.isFavourite ?? false ? "heart.fill" :"heart"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: imageName), style:.plain, target: self, action: #selector(changeFavouriteState(_:)))
         detailsTableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "MoiveCell")
         detailsTableView.dataSource = self
     }
-    
-    private func configureUI() {
-//        activityIndicator.stopAnimating()
-//        activityIndicator.isHidden = true
-       // self.detailsTableView.reloadData()
-        //detailsTableView.isHidden = false
+    @objc func changeFavouriteState(_ sender: AnyObject) {
+        let imageName =  movieDetailsViewModel?.changeFavouriteState() ?? false ? "heart.fill" :"heart"
+        self.navigationItem.rightBarButtonItem?.image = UIImage(systemName: imageName)
     }
     
     

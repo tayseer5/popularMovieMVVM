@@ -31,7 +31,7 @@ class Movie: Object, Codable {
     @Persisted var adult : Bool?
     @Persisted var backdrop_path : String?
 //    @Persisted var genre_ids : [Int]?
-    @Persisted(primaryKey: true) var id : Int?
+    @Persisted(primaryKey: true) var id : Int? 
     @Persisted var original_language : String?
     @Persisted var original_title : String?
     @Persisted var overview : String?
@@ -42,6 +42,9 @@ class Movie: Object, Codable {
     @Persisted var video : Bool?
     @Persisted var vote_average : Double?
     @Persisted var vote_count : Int?
+    lazy var isFavourite : Bool = {
+        isFav(of: self.id ?? 0)
+    }()
    
     enum CodingKeys: String, CodingKey {
         case adult = "adult"
@@ -58,6 +61,10 @@ class Movie: Object, Codable {
         case video = "video"
         case vote_average = "vote_average"
         case vote_count = "vote_count"
+    }
+    func isFav(of num: Int) -> Bool{
+        let favSet: Set<Int> = Set.init(UserDefaults.standard.array(forKey: "FavouriteId") as? [Int] ?? [] )
+        return favSet.contains(id ?? 0)
     }
 }
 
