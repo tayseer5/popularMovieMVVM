@@ -9,26 +9,41 @@ import UIKit
 
 class MovieDetailsViewController: UIViewController {
     // MARK: IbOutLet
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var sourceLabel: UILabel!
-    @IBOutlet weak var publishDateLabel: UILabel!
-    @IBOutlet weak var sectionLabel: UILabel!
-    @IBOutlet weak var detailsLabel: UILabel!
-    @IBOutlet weak var articleImageView: UIImageView!
-    // MARK: varibles
-    var articleDetailsViewModel: MovieDetailsViewModel?
+    @IBOutlet weak var detailsTableView: UITableView!
+    // @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    // MARK: - Properties
+    var movieDetailsViewModel: MovieDetailsViewModel?
     // MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        prepareUI()
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        displayData()
+    // MARK: - Helpers
+    private func prepareUI() {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .red
+        let imageName = movieDetailsViewModel?.movie.isFavourite ?? false ? "heart.fill" :"heart"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: imageName), style:.plain, target: self, action: #selector(changeFavouriteState(_:)))
+        detailsTableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "MoiveCell")
+        detailsTableView.dataSource = self
     }
-    // MARK: Helping Function
-    private func displayData () {
-        titleLabel.text = "Title: \(articleDetailsViewModel?.movie.title ?? "UnDefine")"
-        ImageLoader().loadImage(with: articleDetailsViewModel?.movie.poster_path, image: articleImageView)
+    @objc func changeFavouriteState(_ sender: AnyObject) {
+        let imageName =  movieDetailsViewModel?.changeFavouriteState() ?? false ? "heart.fill" :"heart"
+        self.navigationItem.rightBarButtonItem?.image = UIImage(systemName: imageName)
+    }
+}
+// MARK: - UITableViewDataSource
+extension MovieDetailsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = detailsTableView.dequeueReusableCell(withIdentifier: "MoiveCell", for: indexPath) as! DetailCell
+        cell.setView(name: movieDetailsViewModel?.movie.title,
+                             posterPath: movieDetailsViewModel?.movie.poster_path,
+                             description: movieDetailsViewModel?.movie.overview,
+                             rating: movieDetailsViewModel?.movie.vote_average,
+                             popularity: movieDetailsViewModel?.movie.popularity)
+            return cell
     }
 }
