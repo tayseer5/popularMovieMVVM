@@ -34,7 +34,8 @@ class  MoviesListViewModel: NSObject {
     // this varible will be implemented in the view and this is the bind between viewModel and view
     var bindMoviesListViewModelToController : (() -> (viewBindDelegate?))?
     private var pageNumber = 1
-    private var isDisplayFavList = false
+    var isDisplayFavList = false
+    var isPaginationEnabled = true
     
     // MARK: Init Function
     override init() {
@@ -50,6 +51,9 @@ class  MoviesListViewModel: NSObject {
             switch result {
                     case .success(let response):
                         self.handlingResponse( data: response.results ?? [])
+                        if self.pageNumber == response.total_pages {
+                            self.isPaginationEnabled = false
+                        }
                     case .failure(let error):
                         self.handlingResponse( data: [])
                         print(error.localizedDescription)
@@ -88,31 +92,37 @@ extension MoviesListViewModel{
             moviewDetailsViewController?.movieDetailsViewModel = movieDetailsViewModel
             // after view model finish logic of get model after selection raw and init view mode and view of details screen it pass it to view to push it by calling delegate which view confirm 
             self.viewBindDelegate?.pushToView(viewController: moviewDetailsViewController ?? UIViewController())
-            
         }
     }
     func getNextPage(){
+        if !isDisplayFavList {
         self.getMostPopularMovies()
+        }
     }
     func reloadData () {
         pageNumber = 1
         self.getMostPopularMovies()
+        isDisplayFavList = false
     }
     func switchList(){
         if isDisplayFavList{
+            isDisplayFavList = false
+            isPaginationEnabled = true
             reloadData()
         } else {
+            isDisplayFavList = true
+            isPaginationEnabled = false
             getFavouriteList ()
         }
-        isDisplayFavList = !isDisplayFavList
-        
-        
     }
-    
 }
 extension MoviesListViewModel :ChangeDataInArray {
     func changeFavouriteState(index: Int, state:Bool) {
-        MoviesArray?[index].isFavourite = state
+        if isDisplayFavList {
+            MoviesArray?.remove(at: index)
+        } else {
+            MoviesArray?[index].isFavourite = state
+        }
         self.viewBindDelegate?.reload()
         
         

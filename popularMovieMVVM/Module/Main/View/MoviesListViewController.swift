@@ -10,6 +10,8 @@ class MoviesListViewController: UIViewController {
     // MARK: IbOutLet
     @IBOutlet weak var articleListTableView: UITableView!
     @IBOutlet weak var noDataView: UIView!
+    @IBOutlet weak var reloadButtonFromNoDataView: UIButton!
+    @IBOutlet weak var noDataLabel: UILabel!
     
     // MARK: varibles
     private var moviesListViewModel: MoviesListViewModel?
@@ -56,14 +58,18 @@ class MoviesListViewController: UIViewController {
     // this function for notify data source that there was change in data 
     private func updateDataSource(){
         if moviesListViewModel?.MoviesArray?.count ?? 0 > 0{
+            noDataView.isHidden = true
             self.reload()
         } else {
             noDataView.isHidden = false
+            if moviesListViewModel?.isDisplayFavList ?? false {
+                reloadButtonFromNoDataView.isHidden = true
+                noDataLabel.text = "No Favourite Movies"
+            } else {
+                reloadButtonFromNoDataView.isHidden = false
+                noDataLabel.text = "No Movies"
+            }
         }
-    }
-    @IBAction func test(_ sender: Any) {
-        let test = WARealmManager.shared.getMovies()
-        print(test.count)
     }
     @objc func pullToRefresh(_ sender: AnyObject) {
         moviesListViewModel?.reloadData()
@@ -71,6 +77,9 @@ class MoviesListViewController: UIViewController {
     }
     @objc func switchList(_ sender: AnyObject) {
         moviesListViewModel?.switchList()
+    }
+    @IBAction func tryToReGetData(_ sender: Any) {
+        moviesListViewModel?.reloadData()
     }
 }
 
@@ -99,7 +108,7 @@ extension MoviesListViewController:UITableViewDataSource {
         moviesListViewModel?.selectMovie(at: indexPath.row)
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if (indexPath.row == (moviesListViewModel?.MoviesArray?.count ?? 0) - 4) {
+        if (indexPath.row == (moviesListViewModel?.MoviesArray?.count ?? 0) - 4) && (moviesListViewModel?.isPaginationEnabled ?? true) {
             moviesListViewModel?.getNextPage()
         }
     }

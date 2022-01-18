@@ -16,9 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Zas-9H-els">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Zas-9H-els">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" red="0.1960784314" green="0.3411764706" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLD-ZN-msf">
@@ -34,22 +34,34 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Movies" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXr-kz-Hfb">
                                         <rect key="frame" x="20" y="392" width="374" height="33.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="black" pointSize="28"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" systemColor="systemRedColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jD5-v2-6tB">
+                                        <rect key="frame" x="176" y="445.5" width="62" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                        <state key="normal" title="Reload">
+                                            <color key="titleColor" systemColor="systemRedColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tryToReGetData:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iJT-jX-uNE"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="agE-7C-H1r" firstAttribute="centerY" secondItem="PLD-ZN-msf" secondAttribute="centerY" constant="-100" id="2og-xJ-E5A"/>
+                                    <constraint firstItem="oXr-kz-Hfb" firstAttribute="bottom" secondItem="jD5-v2-6tB" secondAttribute="top" constant="-20" id="8S0-V0-sW1"/>
                                     <constraint firstItem="oXr-kz-Hfb" firstAttribute="top" secondItem="agE-7C-H1r" secondAttribute="bottom" constant="30" id="KOM-5M-rtx"/>
                                     <constraint firstAttribute="trailing" secondItem="oXr-kz-Hfb" secondAttribute="trailing" constant="20" id="bnZ-x8-01H"/>
                                     <constraint firstItem="oXr-kz-Hfb" firstAttribute="leading" secondItem="PLD-ZN-msf" secondAttribute="leading" constant="20" id="ipa-m1-lxW"/>
                                     <constraint firstItem="agE-7C-H1r" firstAttribute="centerX" secondItem="PLD-ZN-msf" secondAttribute="centerX" id="qD2-Yd-Eh8"/>
+                                    <constraint firstItem="jD5-v2-6tB" firstAttribute="centerX" secondItem="PLD-ZN-msf" secondAttribute="centerX" id="rLn-Uh-ZOo"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Zas-9H-els" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="65o-Jx-eyG"/>
                             <constraint firstItem="PLD-ZN-msf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="7YB-OT-A9i"/>
@@ -64,7 +76,9 @@
                     <navigationItem key="navigationItem" id="5Zc-m1-lIN"/>
                     <connections>
                         <outlet property="articleListTableView" destination="Zas-9H-els" id="VmP-bL-i2B"/>
+                        <outlet property="noDataLabel" destination="oXr-kz-Hfb" id="pwG-sE-dmo"/>
                         <outlet property="noDataView" destination="PLD-ZN-msf" id="LLM-KM-h3h"/>
+                        <outlet property="reloadButtonFromNoDataView" destination="jD5-v2-6tB" id="lDW-I2-SyW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -123,8 +137,8 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
